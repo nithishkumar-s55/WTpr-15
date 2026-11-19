@@ -1,0 +1,2465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARTORA Art Gallery</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      color: #45484d;
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* Sticky navigation */
+    header {
+      background-color: white;
+      text-align: center;
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      color: #6B3FA0;
+      margin: 0;
+    }
+
+    nav a {
+      color: #45484d;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: #6B3FA0;
+      text-decoration: underline;
+    }
+
+    /* Dropdown menu */
+    .dropdown {
+      display: inline-block;
+      position: relative;
+    }
+
+    .dropdown button {
+      background: none;
+      color: #45484d;
+      border: none;
+      padding: 0;
+      margin: 0 10px;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .dropdown button:hover {
+      color: #6B3FA0;
+      text-decoration: underline;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 150px;
+      background-color: white;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      z-index: 101;
+      text-align: left;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 8px 12px;
+      margin: 0;
+      text-decoration: none;
+    }
+
+    .dropdown:hover .dropdown-content,
+    .dropdown:focus-within .dropdown-content {
+      display: block;
+    }
+
+    .music {
+      background-color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    /* PRACTICUM 9: SLIDING RACING ANNOUNCEMENT */
+    .animation-bar {
+      overflow: hidden;
+      white-space: nowrap;
+      background: #292b2f;
+      color: white;
+      padding: 12px 0;
+      border-top: 3px solid #6B3FA0;
+      border-bottom: 3px solid #6B3FA0;
+    }
+
+    .sliding-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: slideText 18s linear infinite;
+    }
+
+    .animation-bar:hover .sliding-text {
+      animation-play-state: paused;
+    }
+
+    @keyframes slideText {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    /* Art Gallery banner */
+    .hero {
+      position: relative;
+      height: 260px;
+      overflow: hidden;
+      background: #292b2f;
+    }
+
+    .banner {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.78;
+      animation: bannerZoom 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes bannerZoom {
+      from { transform: scale(1); }
+      to { transform: scale(1.12); }
+    }
+
+    .hero-content {
+      position: absolute;
+      left: 7%;
+      bottom: 28px;
+      z-index: 2;
+      color: white;
+      max-width: 560px;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+      animation: textEntrance 1.2s ease-out both;
+    }
+
+    @keyframes textEntrance {
+      from {
+        opacity: 0;
+        transform: translateX(-45px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .hero-content h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.1;
+      margin: 0 0 8px;
+    }
+
+    .live-tag {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      z-index: 3;
+      padding: 7px 12px;
+      background: #6B3FA0;
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      animation: pulseTag 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseTag {
+      0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(107, 63, 160, 0.6);
+      }
+      50% {
+        opacity: 0.75;
+        box-shadow: 0 0 0 8px rgba(107, 63, 160, 0);
+      }
+    }
+
+    /* Sidebar and main content */
+    .page-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      width: 94%;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+
+    .sidebar {
+      width: 210px;
+      flex-shrink: 0;
+      background-color: white;
+      border-left: 5px solid #6B3FA0;
+      border-radius: 8px;
+      padding: 15px;
+      box-sizing: border-box;
+      position: sticky;
+      top: 125px;
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #6B3FA0;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #45484d;
+      padding: 7px 0;
+      text-decoration: none;
+      transition: color 0.3s ease, padding-left 0.3s ease;
+    }
+
+    .sidebar a:hover {
+      color: #6B3FA0;
+      padding-left: 5px;
+    }
+
+    .main-content {
+      min-width: 0;
+      flex: 1;
+    }
+
+    /* Media section */
+    .media {
+      width: 100%;
+      max-width: 1000px;
+      margin: 20px auto;
+    }
+
+    .section-heading {
+      margin-bottom: 15px;
+      border-left: 5px solid #6B3FA0;
+      padding-left: 12px;
+    }
+
+    .box {
+      width: 48%;
+      display: inline-block;
+      vertical-align: top;
+      margin: 0 1% 18px 0;
+      padding: 12px;
+      box-sizing: border-box;
+      background: white;
+      border-radius: 8px;
+      position: relative;
+      box-shadow: 0 3px 10px rgba(25, 25, 25, 0.07);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .box:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 22px rgba(25, 25, 25, 0.16);
+    }
+
+    .box h3 {
+      margin: 0 0 10px;
+      color: #45484d;
+    }
+
+    .box iframe,
+    .box video {
+      width: 100%;
+      height: 250px;
+      border: 0;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .media-tag {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      z-index: 2;
+      background: #45484d;
+      color: white;
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 3px;
+    }
+
+    /* Art Gallery statistics */
+    .feature-strip {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 22px 0;
+    }
+
+    .feature {
+      flex: 1 1 150px;
+      background: white;
+      padding: 15px;
+      border-radius: 7px;
+      border-bottom: 3px solid #6B3FA0;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-5px);
+      background-color: #F7F1FC;
+    }
+
+    .feature strong {
+      display: block;
+      font-size: 22px;
+      color: #6B3FA0;
+    }
+
+    /* Race update cards */
+    .race-card {
+      position: relative;
+      overflow: hidden;
+      background: white;
+      border-radius: 8px;
+      padding: 18px;
+      margin: 18px 0;
+      border-left: 5px solid #6B3FA0;
+      box-shadow: 0 3px 10px rgba(25, 25, 25, 0.07);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .race-card:hover {
+      transform: translateX(6px);
+      box-shadow: 0 7px 18px rgba(25, 25, 25, 0.13);
+    }
+
+    .race-card h3 {
+      margin-top: 0;
+      padding-right: 90px;
+    }
+
+    .card-status {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 1;
+      background: #EEE5F7;
+      color: #4E2A78;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 5px 8px;
+      border-radius: 4px;
+    }
+
+    .race-card p {
+      margin-bottom: 0;
+    }
+
+    /* Race weekend schedule */
+    .schedule {
+      position: relative;
+      margin: 20px 0;
+      padding: 5px 0 5px 28px;
+      border-left: 3px solid #6B3FA0;
+    }
+
+    .schedule-item {
+      position: relative;
+      background: white;
+      margin: 0 0 14px;
+      padding: 12px 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 7px rgba(25, 25, 25, 0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .schedule-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 12px rgba(25, 25, 25, 0.12);
+    }
+
+    .schedule-item::before {
+      content: "";
+      position: absolute;
+      left: -37px;
+      top: 17px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #6B3FA0;
+      border: 3px solid #f1f1f1;
+      transition: transform 0.3s ease;
+    }
+
+    .schedule-item:hover::before {
+      transform: scale(1.35);
+    }
+
+    .schedule-item strong {
+      color: #45484d;
+    }
+
+    /* Application form */
+    .form-section {
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+      margin: 20px auto;
+      background-color: white;
+      padding: 18px;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .form-section input,
+    .form-section select,
+    .form-section textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px;
+      box-sizing: border-box;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-section input:focus,
+    .form-section select:focus,
+    .form-section textarea:focus {
+      outline: none;
+      border-color: #6B3FA0;
+      box-shadow: 0 0 0 3px rgba(165, 42, 53, 0.12);
+    }
+
+    button {
+      background-color: #6B3FA0;
+      color: white;
+      border: 0;
+      padding: 10px 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #4E2A78;
+    }
+
+    .form-section button:hover {
+      transform: translateY(-2px);
+    }
+
+    .dropdown button {
+      background: none;
+      color: #45484d;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .dropdown button:hover {
+      background: none;
+      color: #6B3FA0;
+    }
+
+    footer {
+      background-color: #292b2f;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      clear: both;
+    }
+
+    /* Responsive CSS Grid gallery */
+    .gallery-section {
+      width: 94%;
+      max-width: 1200px;
+      margin: 28px auto;
+    }
+
+    .gallery-intro {
+      margin-top: -5px;
+      color: #666a70;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .gallery-card {
+      min-width: 0;
+      overflow: hidden;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(25, 25, 25, 0.08);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      animation: cardEntrance 0.8s ease both;
+    }
+
+    .gallery-card:nth-child(1) { animation-delay: 0.1s; }
+    .gallery-card:nth-child(2) { animation-delay: 0.25s; }
+    .gallery-card:nth-child(3) { animation-delay: 0.4s; }
+    .gallery-card:nth-child(4) { animation-delay: 0.55s; }
+    .gallery-card:nth-child(5) { animation-delay: 0.7s; }
+    .gallery-card:nth-child(6) { animation-delay: 0.85s; }
+
+    @keyframes cardEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 14px 26px rgba(25, 25, 25, 0.18);
+    }
+
+    .gallery-open {
+      display: block;
+      position: relative;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: #292b2f;
+      overflow: hidden;
+    }
+
+    .gallery-open img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      transition: transform 0.5s ease, filter 0.5s ease;
+    }
+
+    .gallery-open:hover img,
+    .gallery-open:focus-visible img {
+      transform: scale(1.12);
+      filter: brightness(0.7);
+    }
+
+    .gallery-open::after {
+      content: "VIEW ARTWORK";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(107, 63, 160, 0.45);
+      color: white;
+      font-weight: bold;
+      letter-spacing: 1px;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+
+    .gallery-open:hover::after,
+    .gallery-open:focus-visible::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .gallery-caption {
+      padding: 12px 14px;
+      margin: 0;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    .gallery-card:hover .gallery-caption {
+      color: #6B3FA0;
+    }
+        /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 16, 18, 0.92);
+    }
+
+    .lightbox.open {
+      display: flex;
+      animation: lightboxFade 0.3s ease both;
+    }
+
+    @keyframes lightboxFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .lightbox-content {
+      max-width: 1000px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      animation: imagePop 0.35s ease both;
+    }
+
+    @keyframes imagePop {
+      from {
+        transform: scale(0.92);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .lightbox-image {
+      display: block;
+      max-width: 100%;
+      max-height: 75vh;
+      margin: 0 auto;
+      object-fit: contain;
+      border-radius: 5px;
+    }
+
+    .lightbox-caption {
+      margin: 12px 0 0;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 14px;
+      right: 22px;
+      padding: 5px 12px;
+      background: #6B3FA0;
+      color: white;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .gallery-open:focus-visible,
+    .lightbox-close:focus-visible {
+      outline: 3px solid #6B3FA0;
+      outline-offset: 3px;
+    }
+
+    /* PRACTICUM 9: ANIMATION CONTROL BUTTONS */
+    .animation-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .animation-controls p {
+      margin: 0 8px 0 0;
+      font-weight: bold;
+    }
+
+    .animation-controls button {
+      padding: 8px 13px;
+    }
+
+    /* PRACTICUM 10: DOM INTERACTION PANEL */
+    .dom-lab {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 24px 0;
+      border-top: 4px solid #6B3FA0;
+      box-shadow: 0 3px 10px rgba(25, 25, 25, 0.07);
+    }
+
+    .dom-lab h2 {
+      margin-top: 0;
+      color: #6B3FA0;
+    }
+
+    .dom-lab-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .dom-panel {
+      min-width: 0;
+      padding: 15px;
+      background: #f7f7f7;
+      border-radius: 7px;
+      border: 1px solid #e3e3e3;
+    }
+
+    .dom-panel h3 {
+      margin-top: 0;
+      color: #45484d;
+    }
+
+    .dom-panel input,
+    .dom-panel select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px;
+      margin: 5px 0 12px;
+      border: 1px solid #c9c9c9;
+      border-radius: 4px;
+      font: inherit;
+    }
+
+    .dom-panel button {
+      margin: 4px 4px 4px 0;
+    }
+
+    .dom-output {
+      min-height: 26px;
+      padding: 9px;
+      margin: 10px 0 0;
+      border-left: 4px solid #6B3FA0;
+      background: white;
+      border-radius: 3px;
+      overflow-wrap: anywhere;
+    }
+
+    .dom-clock {
+      font-size: 28px;
+      font-weight: bold;
+      color: #6B3FA0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .dom-help {
+      color: #666a70;
+      font-size: 14px;
+    }
+
+    /* PRACTICUM 10: RACE EVENT BILLING CALCULATOR */
+    .billing-panel {
+      grid-column: 1 / -1;
+      min-width: 0;
+      padding: 18px;
+      background: #f7f7f7;
+      border: 1px solid #e3e3e3;
+      border-radius: 7px;
+    }
+
+    .billing-panel h3 {
+      margin-top: 0;
+      color: #6B3FA0;
+    }
+
+    .billing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .billing-field label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .billing-field input,
+    .billing-field select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px;
+      border: 1px solid #c9c9c9;
+      border-radius: 4px;
+      font: inherit;
+      background: white;
+    }
+
+    .billing-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .billing-options label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: normal;
+    }
+
+    .billing-options input {
+      accent-color: #6B3FA0;
+    }
+
+    .bill-summary {
+      margin-top: 16px;
+      padding: 14px;
+      background: white;
+      border-left: 4px solid #6B3FA0;
+      border-radius: 4px;
+    }
+
+    .bill-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 5px 0;
+      border-bottom: 1px solid #eeeeee;
+    }
+
+    .bill-total {
+      margin-top: 8px;
+      padding-top: 10px;
+      border-top: 2px solid #6B3FA0;
+      color: #6B3FA0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .billing-actions {
+      margin-top: 12px;
+    }
+
+    @media (max-width: 650px) {
+      .billing-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .dom-lab-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+
+    /* PRACTICUM 12: ENDPOINT DATA MANAGEMENT */
+    .api-lab {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 24px 0;
+      border-top: 4px solid #6B3FA0;
+      box-shadow: 0 3px 10px rgba(25, 25, 25, 0.07);
+    }
+
+    .api-lab h2 { margin-top: 0; color: #6B3FA0; }
+    .api-description { color: #666a70; }
+    .api-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .api-panel {
+      min-width: 0;
+      padding: 15px;
+      background: #f7f7f7;
+      border: 1px solid #e3e3e3;
+      border-radius: 7px;
+    }
+    .api-panel h3 { margin-top: 0; color: #45484d; }
+    .api-panel input, .api-panel textarea, .api-panel select {
+      width: 100%; box-sizing: border-box; padding: 9px; margin: 5px 0 12px;
+      border: 1px solid #c9c9c9; border-radius: 4px; font: inherit;
+    }
+    .api-panel textarea { min-height: 82px; resize: vertical; }
+    .api-status {
+      min-height: 24px; padding: 10px; margin: 12px 0;
+      background: white; border-left: 4px solid #6B3FA0; border-radius: 3px;
+      overflow-wrap: anywhere;
+    }
+    .api-status.success { border-left-color: #27834a; }
+    .api-status.error { border-left-color: #b3261e; }
+    .api-status.loading { border-left-color: #b07b16; }
+    .api-list { display: grid; gap: 10px; margin-top: 12px; }
+    .api-record {
+      padding: 12px; background: white; border: 1px solid #e1e1e1;
+      border-radius: 5px; overflow-wrap: anywhere;
+    }
+    .api-record h4 { margin: 0 0 6px; color: #6B3FA0; }
+    .api-record p { margin: 5px 0; }
+    .api-record small { color: #666a70; }
+    .api-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .api-actions button { margin: 0; }
+    .api-meta { font-size: 13px; color: #666a70; overflow-wrap: anywhere; }
+    .api-empty { padding: 14px; text-align: center; background: white; border-radius: 4px; }
+    .api-count { color: #6B3FA0; font-weight: bold; }
+    @media (max-width: 650px) {
+      .api-grid { grid-template-columns: 1fr; }
+      .api-lab { padding: 15px; }
+    }
+
+    /* Responsive layout */
+    @media (max-width: 800px) {
+      .page-layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .sidebar a {
+        display: inline-block;
+        margin-right: 12px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .box {
+        width: 100%;
+        margin-right: 0;
+      }
+
+      .hero {
+        height: 220px;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 5px 8px;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .hero-content {
+        left: 5%;
+        right: 5%;
+        bottom: 20px;
+      }
+
+      .live-tag {
+        top: 12px;
+        right: 12px;
+      }
+    }
+
+    /* PRACTICUM 8: MEDIA QUERIES */
+    @media (max-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .page-layout {
+        gap: 16px;
+      }
+
+      .box iframe,
+      .box video {
+        height: 220px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .gallery-section {
+        width: 92%;
+      }
+
+      .gallery-open img {
+        aspect-ratio: 16 / 10;
+      }
+
+      .lightbox {
+        padding: 12px;
+      }
+
+      .lightbox-image {
+        max-height: 65vh;
+      }
+
+      .gallery-caption {
+        padding: 10px 12px;
+      }
+
+      .box iframe,
+      .box video {
+        height: 200px;
+      }
+
+      .form-section {
+        width: 92%;
+      }
+    }
+
+    @media (max-width: 380px) {
+      body {
+        font-size: 15px;
+      }
+
+      .hero-content h2 {
+        font-size: 26px;
+      }
+
+      .live-tag {
+        font-size: 10px;
+        padding: 5px 7px;
+      }
+
+      .gallery-grid {
+        gap: 10px;
+      }
+    }
+
+    /* PRACTICUM 9: RESPECT REDUCED MOTION SETTINGS */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  
+    /* PRACTICUM 13: ARTORA ART GALLERY TASK MANAGER */
+    .task-manager-panel { background:#fff; border-left:5px solid #6B3FA0; border-radius:8px; padding:22px; margin:25px 0; box-shadow:0 3px 12px rgba(0,0,0,.07); }
+    .task-manager-panel h2,.task-manager-panel h3 { color:#6B3FA0; }
+    .task-form-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .task-form-row input { flex:1; min-width:200px; }
+    .task-manager-panel input,.task-manager-panel select { padding:10px; border:1px solid #ccc; border-radius:5px; font:inherit; }
+    .task-manager-panel button { background:#6B3FA0; color:white; border:0; border-radius:5px; padding:10px 14px; cursor:pointer; font:inherit; margin:4px; }
+    .task-manager-panel button:hover { background:#4E2A78; }
+    .task-manager-panel button:disabled { opacity:.6; cursor:not-allowed; }
+    .task-tools { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:15px 0; }
+    .task-stats { display:flex; gap:12px; flex-wrap:wrap; margin:14px 0; }
+    .task-stat { background:#292b2f; color:white; padding:9px 14px; border-radius:5px; }
+    .task-item { background:#f5f5f5; border:1px solid #ddd; border-left:4px solid #6B3FA0; border-radius:6px; padding:12px; margin:10px 0; display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .task-item.completed { opacity:.7; border-left-color:#39804b; }
+    .task-item.completed .task-title { text-decoration:line-through; }
+    .task-item-main { flex:1; min-width:180px; overflow-wrap:anywhere; }
+    .task-item-main small { display:block; color:#666; margin-top:4px; }
+    .task-actions { display:flex; flex-wrap:wrap; }
+    .task-actions button { margin:2px; padding:7px 10px; }
+    .task-empty { text-align:center; padding:20px; color:#777; }
+    .task-message { min-height:24px; color:#6B3FA0; font-weight:bold; }
+    @media(max-width:600px){ .task-manager-panel{padding:14px;} .task-item{align-items:flex-start;} .task-actions{width:100%;} }
+
+
+    /* PRACTICUM 14: INTERACTIVE RACING QUIZ */
+    .quiz-panel{background:white;border-top:4px solid #6B3FA0;border-radius:8px;padding:22px;margin:25px 0;box-shadow:0 3px 12px rgba(0,0,0,.07)}
+    .quiz-panel h2,.quiz-panel h3{color:#6B3FA0}
+    .quiz-progress{height:10px;background:#e5e5e5;border-radius:8px;overflow:hidden;margin:12px 0}
+    .quiz-progress-bar{height:100%;width:0;background:#6B3FA0;transition:width .3s}
+    .quiz-options{display:grid;gap:10px;margin:16px 0}
+    .quiz-option{width:100%;text-align:left;background:#f6f6f6;color:#45484d;border:1px solid #ddd;padding:12px;border-radius:6px}
+    .quiz-option:hover:not(:disabled){background:#EEE5F7;color:#4E2A78}
+    .quiz-option:disabled{cursor:default;opacity:1}
+    .quiz-option.correct{background:#e1f3e6;border-color:#39804b;color:#205b32}
+    .quiz-option.incorrect{background:#f8e2e2;border-color:#b3261e;color:#8a1d1d}
+    .quiz-feedback{min-height:28px;font-weight:bold;margin:12px 0}
+    .quiz-status{background:#f7f7f7;padding:12px;border-left:4px solid #6B3FA0;border-radius:4px}
+    .quiz-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .quiz-controls button{margin:0}
+    .quiz-final{text-align:center;padding:18px;background:#f7f7f7;border-radius:7px}
+    @media(max-width:600px){.quiz-panel{padding:14px}}
+
+
+    /* ARTORA: reliable dark theme */
+    body.dark-mode {
+      background: #17131f !important;
+      color: #f3edf9 !important;
+    }
+    body.dark-mode header,
+    body.dark-mode main,
+    body.dark-mode section,
+    body.dark-mode article,
+    body.dark-mode aside,
+    body.dark-mode .music,
+    body.dark-mode .animation-controls,
+    body.dark-mode .sidebar,
+    body.dark-mode .box,
+    body.dark-mode .feature,
+    body.dark-mode .race-card,
+    body.dark-mode .schedule-item,
+    body.dark-mode .form-section,
+    body.dark-mode .dom-lab,
+    body.dark-mode .api-lab,
+    body.dark-mode .api-record,
+    body.dark-mode .task-manager-panel,
+    body.dark-mode .quiz-panel,
+    body.dark-mode .gallery-card,
+    body.dark-mode .billing-panel,
+    body.dark-mode .bill-summary,
+    body.dark-mode .dom-panel,
+    body.dark-mode .api-panel,
+    body.dark-mode .quiz-final,
+    body.dark-mode .quiz-status,
+    body.dark-mode .task-item,
+    body.dark-mode .task-empty,
+    body.dark-mode .gallery-open,
+    body.dark-mode .dropdown-content {
+      background-color: #282132 !important;
+      color: #f3edf9 !important;
+      border-color: #59466d !important;
+    }
+    body.dark-mode p, body.dark-mode li, body.dark-mode label,
+    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+    body.dark-mode h4, body.dark-mode nav a,
+    body.dark-mode .dropdown-content a,
+    body.dark-mode .gallery-caption,
+    body.dark-mode .gallery-intro,
+    body.dark-mode .dom-help,
+    body.dark-mode .api-description,
+    body.dark-mode .api-meta,
+    body.dark-mode .task-item-main small { color: #eee5f7 !important; }
+    body.dark-mode input, body.dark-mode select,
+    body.dark-mode textarea {
+      background: #211a2b !important;
+      color: #fff !important;
+      border-color: #80649a !important;
+    }
+    body.dark-mode button:not(#theme-toggle) {
+      border-color: #80649a;
+    }
+    body.dark-mode footer { background: #100d16 !important; color: #eee5f7 !important; }
+    #theme-toggle { margin: 5px 8px; padding: 8px 12px; cursor: pointer; }
+
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>ARTORA Art Gallery</h1>
+    <p>A curated space for creativity, colour, culture, and contemporary art.</p>
+
+    <nav>
+      <a href="#media">Media</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#endpoint-practicum">API Data</a>
+
+      <div class="dropdown">
+        <button type="button">Exhibition Updates ▼</button>
+        <div class="dropdown-content">
+          <a href="#race-info">Exhibition Updates</a>
+          <a href="#dom-practicum">Live Gallery Control</a>
+          <a href="#endpoint-practicum">Endpoint Data</a>
+          <a href="#task-manager">Task Manager</a>
+          <a href="#interactive-quiz">Art Gallery Quiz</a>
+          <a href="#application">Join ARTORA</a>
+          <a href="#media">Gallery Media</a>
+          <a href="#gallery">Artwork Gallery</a>
+        </div>
+      </div>
+
+      <a href="#application">Join ARTORA</a>
+      <button type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">🌙 Dark Mode</button>
+    </nav>
+  </header>
+
+  <div class="music">
+    <p>Gallery Ambience:</p>
+    <audio controls autoplay>
+      <source src="East_Duo_-_Chubina_(mp3.pm).mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <!-- PRACTICUM 9: CONTINUOUS SLIDING TEXT -->
+  <div class="animation-bar">
+    <div class="sliding-text">
+      ARTORA ART GALLERY 2026 &nbsp; | &nbsp;
+      MADE FOR CREATIVITY &nbsp; | &nbsp;
+      INSPIRED BY ART &nbsp; | &nbsp;
+      EVERY DETAIL TELLS A STORY &nbsp; | &nbsp;
+      ARTORA ART GALLERY 2026 &nbsp; | &nbsp;
+      MADE FOR CREATIVITY &nbsp; | &nbsp;
+      INSPIRED BY ART &nbsp; | &nbsp;
+      EVERY DETAIL TELLS A STORY
+    </div>
+  </div>
+
+  <!-- PRACTICUM 9: ANIMATION CONTROLS -->
+  <div class="animation-controls">
+    <p>Sliding Announcement:</p>
+    <button type="button" id="pause-animation">Pause</button>
+    <button type="button" id="play-animation">Play</button>
+    <button type="button" id="restart-animation">Restart</button>
+  </div>
+
+  <section class="hero">
+    <img class="banner"
+         src="art.jpeg"
+         alt="ARTORA Art Gallery banner">
+
+    <span class="live-tag">ARTORA EXHIBITION 2026</span>
+
+    <div class="hero-content">
+      <h2>Created for Expression.<br>Inspired by Imagination.</h2>
+      <p>Discover remarkable artworks, emerging artists, and creative stories.</p>
+    </div>
+  </section>
+    <div class="page-layout">
+
+    <aside class="sidebar">
+      <h2>Gallery Hub</h2>
+      <p>Explore the ARTORA Art Gallery page.</p>
+      <a href="#media">Gallery Media</a>
+      <a href="#gallery">Artwork Gallery</a>
+      <a href="#race-info">Exhibition Updates</a>
+      <a href="#dom-practicum">Live Gallery Control</a>
+      <a href="#endpoint-practicum">Endpoint Data</a>
+      <a href="#task-manager">Task Manager</a>
+          <a href="#interactive-quiz">Art Gallery Quiz</a>
+      <a href="#application">Join ARTORA</a>
+    </aside>
+
+    <main class="main-content">
+
+      <section class="media" id="media">
+        <h2 class="section-heading">Inside ARTORA Art Gallery</h2>
+
+        <div class="feature-strip">
+          <div class="feature">
+            <strong>300+</strong>
+            <span>Artworks on display</span>
+          </div>
+
+          <div class="feature">
+            <strong>0.2s</strong>
+            <span>Featured collections</span>
+          </div>
+
+          <div class="feature">
+            <strong>100%</strong>
+            <span>Creative expression</span>
+          </div>
+        </div>
+
+        <div class="box">
+          <span class="media-tag">GUIDE</span>
+          <h3>Art Gallery 101</h3>
+          <iframe src="art1.pdf"
+                  title="Art Gallery 101 PDF"></iframe>
+        </div>
+
+        <div class="box">
+          <span class="media-tag">FEATURE VIDEO</span>
+          <h3>Featured Exhibition Film</h3>
+          <iframe
+            src="https://www.youtube.com/embed/D52YCwKeu6s"
+            title="YouTube art gallery video"
+            allowfullscreen></iframe>
+        </div>
+
+        <div class="box">
+          <span class="media-tag">ONBOARD</span>
+          <h3>Artist Studio Tour</h3>
+          <video controls>
+            <source src="video.mp4"
+                    type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="box">
+          <span class="media-tag">LOCATION</span>
+          <h3>Visit the Gallery</h3>
+          <iframe
+            src="https://www.google.com/maps?q=National+Gallery+of+Modern+Art+Bengaluru&output=embed"
+            title="ARTORA Art Gallery location"
+            loading="lazy"></iframe>
+        </div>
+      </section>
+
+      <!-- RESPONSIVE IMAGE GALLERY -->
+      <section class="gallery-section" id="gallery">
+        <h2 class="section-heading">Art Gallery Gallery</h2>
+        <p class="gallery-intro">
+          Move your pointer over each card to see the animation.
+          Select any image to view it larger.
+        </p>
+
+        <div class="gallery-grid">
+
+          <article class="gallery-card">
+            <button class="gallery-open" type="button"
+              data-full="img1.png"
+              data-caption="Performance car on the road"
+              aria-label="Enlarge performance car image">
+              <img
+                src="img1.png"
+                alt="Performance car viewed from the front"
+                loading="lazy" width="600" height="450">
+            </button>
+            <p class="gallery-caption">Abstract Expressions</p>
+          </article>
+
+          <article class="gallery-card">
+            <button class="gallery-open" type="button"
+              data-full="img2.png"
+              data-caption="Motor art gallery action"
+              aria-label="Enlarge motor art gallery image">
+              <img
+                src="img2.png"
+                alt="Motorsport vehicle in action"
+                loading="lazy" width="600" height="450">
+            </button>
+            <p class="gallery-caption">Canvas Stories</p>
+          </article>
+
+          <article class="gallery-card">
+            <button class="gallery-open" type="button"
+              data-full="img3.png"
+              data-caption="Sports car detail"
+              aria-label="Enlarge sports car image">
+              <img
+                src="img3.png"
+                alt="Sports car displayed outdoors"
+                loading="lazy" width="600" height="450">
+            </button>
+            <p class="gallery-caption">Modern Portraits</p>
+          </article>
+
+          <article class="gallery-card">
+            <button class="gallery-open" type="button"
+              data-full="img4.png"
+              data-caption="Art Gallery car detail"
+              aria-label="Enlarge art gallery car detail image">
+              <img
+                src="img4.png"
+                alt="Close view of a car body and wheel"
+                loading="lazy" width="600" height="450">
+            </button>
+            <p class="gallery-caption">Sculpture & Form</p>
+          </article>
+
+          <article class="gallery-card">
+            <button class="gallery-open" type="button"
+              data-full="img5.png"
+              data-caption="Automotive styling"
+              aria-label="Enlarge automotive styling image">
+              <img
+                src="img5.png"
+                alt="Modern sports car in a studio setting"
+                loading="lazy" width="600" height="450">
+            </button>
+            <p class="gallery-caption">Colour Studies</p>
+          </article>
+
+          <article class="gallery-card">
+            <button class="gallery-open" type="button"
+              data-full="img6.png"
+              data-caption="Sports car on a scenic road"
+              aria-label="Enlarge sports car road image">
+              <img
+                src="img6.png"
+                alt="Sports car on a road with scenery in the background"
+                loading="lazy" width="600" height="450">
+            </button>
+            <p class="gallery-caption">Landscape Collection</p>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- Lightbox viewer -->
+      <div class="lightbox" id="lightbox"
+           role="dialog" aria-modal="true"
+           aria-label="Expanded gallery image" aria-hidden="true">
+
+        <button class="lightbox-close" id="lightbox-close"
+                type="button" aria-label="Close image viewer">
+          &times;
+        </button>
+
+        <div class="lightbox-content">
+          <img class="lightbox-image" id="lightbox-image" src="" alt="">
+          <p class="lightbox-caption" id="lightbox-caption"></p>
+        </div>
+      </div>
+
+      <section id="race-info">
+        <h2 class="section-heading">Gallery Control Updates</h2>
+
+        <article class="race-card">
+          <span class="card-status">UPCOMING</span>
+          <h3>The Annual Art Showcase</h3>
+          <p>
+            Follow the latest preparations, team briefings, and track activity
+            as the ARTORA Art Gallery gets ready for race weekend.
+          </p>
+        </article>
+
+        <article class="race-card">
+          <span class="card-status">TEAM NEWS</span>
+          <h3>Meet the Featured Artists</h3>
+          <p>
+            Every second matters. The pit crew, race engineers, and driver work
+            together to make fast decisions under pressure.
+          </p>
+        </article>
+
+        <h2 class="section-heading">Exhibition Schedule</h2>
+
+        <div class="schedule">
+          <div class="schedule-item">
+            <strong>09:00 AM — Gallery Opens</strong>
+            <p>Explore the current collection and discover featured artworks.</p>
+          </div>
+
+          <div class="schedule-item">
+            <strong>12:30 PM — Artist Talk</strong>
+            <p>Meet the artists and learn about their inspiration and techniques.</p>
+          </div>
+
+          <div class="schedule-item">
+            <strong>03:00 PM — Curator Walkthrough</strong>
+            <p>Join a guided tour through the exhibition highlights.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRACTICUM 10: DOM ELEMENTS AND USER INTERACTIONS -->
+      <section class="dom-lab" id="dom-practicum">
+        <h2 class="section-heading">Live Gallery Control – DOM Interaction Lab</h2>
+        <p>
+          Use the controls below to interact with the page. JavaScript selects
+          HTML elements, changes their content, and responds to button and form events.
+        </p>
+
+        <div class="dom-lab-grid">
+
+          <div class="dom-panel">
+            <h3>1. Artist Registration</h3>
+            <form id="driver-form" action="#" method="post">
+              <label for="driver-name">Artist Name</label>
+              <input id="driver-name" name="driver-name" type="text"
+                     placeholder="Enter artist name" required>
+
+              <label for="driver-team">Choose Art Category</label>
+              <select id="driver-team" name="driver-team" required>
+                <option value="">Choose a category</option>
+                <option value="ARTORA Art Gallery Red">ARTORA Art Gallery Red</option>
+                <option value="Photography">Photography</option>
+                <option value="Apex Art Gallery">Apex Art Gallery</option>
+              </select>
+
+              <button id="register-driver" type="submit">Register Artist</button>
+            </form>
+
+            <p class="dom-output" id="driver-message" aria-live="polite">
+              Registration details will appear here.
+            </p>
+          </div>
+
+          <div class="dom-panel">
+            <h3>2. Gallery Visit Timer</h3>
+            <p class="dom-clock" id="race-clock" aria-live="off">00:00</p>
+            <p class="dom-help">Start the timer to track your gallery visit.</p>
+            <button id="start-timer" type="button" onclick="startRaceTimer()">Start Visit Timer</button>
+            <button id="stop-timer" type="button" onclick="stopRaceTimer()">Pause Visit Timer</button>
+            <button id="reset-timer" type="button" onclick="resetRaceTimer()">Reset Visit Timer</button>
+            <p class="dom-output" id="timer-message" aria-live="polite">
+              Timer is ready.
+            </p>
+          </div>
+
+          <div class="dom-panel">
+            <h3>3. Exhibition Reminder</h3>
+            <p class="dom-help">
+              Schedule an exhibition reminder to appear after five seconds, or cancel it.
+            </p>
+            <button id="schedule-notice" type="button" onclick="scheduleRaceNotice()">Schedule Reminder</button>
+            <button id="cancel-notice" type="button" onclick="cancelRaceNotice()">Cancel Reminder</button>
+            <p class="dom-output" id="notice-message" aria-live="polite">
+              No notification is scheduled.
+            </p>
+          </div>
+
+          <div class="dom-panel">
+            <h3>4. Exhibition Status</h3>
+            <label for="track-condition">Choose exhibition status</label>
+            <select id="track-condition">
+              <option value="Open">Open</option>
+              <option value="Opening Soon">Opening Soon</option>
+              <option value="Artist Talk">Artist Talk</option>
+              <option value="Temporarily Closed">Temporarily Closed</option>
+            </select>
+            <button id="update-track" type="button" onclick="updateTrackStatus()">Update Exhibition Status</button>
+            <p class="dom-output" id="track-message" aria-live="polite">
+              Exhibition status: Open
+            </p>
+          </div>
+
+          <div class="billing-panel">
+            <h3>5. Artwork Purchase & Bill Calculator</h3>
+            <p class="dom-help">
+              Select a artwork category, enter the number of artworks, and choose optional add-ons.
+              The bill updates automatically using DOM event handling.
+            </p>
+
+            <div class="billing-grid">
+              <div class="billing-field">
+                <label for="artwork-type">Artwork Category</label>
+                <select id="artwork-type">
+                  <option value="1500">Art Print - ₹1,500</option>
+                  <option value="3500">Canvas Artwork - ₹3,500</option>
+                  <option value="6000">Original Artwork - ₹6,000</option>
+                </select>
+              </div>
+
+              <div class="billing-field">
+                <label for="artwork-quantity">Quantity</label>
+                <input id="artwork-quantity" type="number" min="1" max="10" value="1">
+              </div>
+            </div>
+
+            <p><strong>Optional Add-ons</strong></p>
+            <div class="billing-options">
+              <label for="parking-addon">
+                <input type="checkbox" id="parking-addon" value="500">
+                Gift wrapping (₹500 per artwork)
+              </label>
+              <label for="food-addon">
+                <input type="checkbox" id="food-addon" value="750">
+                Certificate of authenticity (₹750 per artwork)
+              </label>
+            </div>
+
+            <button id="calculate-bill" type="button">Calculate Purchase Total</button>
+            <button id="reset-bill" type="button">Reset Purchase</button>
+
+            <div class="bill-summary" aria-live="polite">
+              <h4>Billing Summary</h4>
+              <div class="bill-row">
+                <span>Artwork amount</span>
+                <strong id="artwork-amount">₹1,500.00</strong>
+              </div>
+              <div class="bill-row">
+                <span>Add-ons</span>
+                <strong id="addon-amount">₹0.00</strong>
+              </div>
+              <div class="bill-row">
+                <span>Subtotal</span>
+                <strong id="bill-subtotal">₹1,500.00</strong>
+              </div>
+              <div class="bill-row">
+                <span>Service charge (5%)</span>
+                <strong id="service-charge">₹75.00</strong>
+              </div>
+              <div class="bill-row">
+                <span>GST (18%)</span>
+                <strong id="gst-amount">₹283.50</strong>
+              </div>
+              <div class="bill-row bill-total">
+                <span>Grand Total</span>
+                <strong id="grand-total">₹1,858.50</strong>
+              </div>
+              <p class="dom-output" id="bill-message">
+                Bill calculated for 1 General Admission artwork.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- PRACTICUM 12: ENDPOINT DATA MANAGEMENT USING FETCH API -->
+      <section class="api-lab" id="endpoint-practicum">
+        <h2 class="section-heading">Artwork Collection Data – API Control Centre</h2>
+        <p class="api-description">
+          This section demonstrates client-server communication using JavaScript Fetch API.
+          Retrieve race news from a REST endpoint, search the returned records, and send sample
+          create, update, and delete requests. The page updates dynamically without reloading.
+        </p>
+
+        <div class="api-panel">
+          <h3>1. Retrieve Exhibition Updates (GET)</h3>
+          <p class="api-meta">Endpoint: https://jsonplaceholder.typicode.com/posts?_limit=8</p>
+          <label for="api-search">Filter retrieved updates</label>
+          <input type="search" id="api-search" placeholder="Search by title or content">
+          <div class="api-actions">
+            <button type="button" id="api-fetch-button">Fetch Exhibition Updates</button>
+            <button type="button" id="api-clear-button">Clear Collection</button>
+          </div>
+          <p class="api-status" id="api-status" role="status" aria-live="polite">Ready. Select Fetch Exhibition Updates to contact the endpoint.</p>
+          <p class="api-meta" id="api-response-meta">No API response received yet.</p>
+          <p class="api-count" id="api-record-count">Records displayed: 0</p>
+          <div class="api-list" id="api-record-list" aria-live="polite">
+            <p class="api-empty">Artwork records will appear here after a successful API request.</p>
+          </div>
+        </div>
+
+        <div class="api-grid">
+          <div class="api-panel">
+            <h3>2. Add a Exhibition Update (POST)</h3>
+            <form id="api-create-form" action="#" method="post">
+              <label for="api-new-title">Update title</label>
+              <input type="text" id="api-new-title" maxlength="80" placeholder="Example: Artist Talk session begins" required>
+              <label for="api-new-body">Update details</label>
+              <textarea id="api-new-body" maxlength="300" placeholder="Enter a short race update" required></textarea>
+              <button type="submit" id="api-create-button">Send POST Request</button>
+            </form>
+            <p class="api-status" id="api-create-status" role="status" aria-live="polite">Enter details and submit to send a sample POST request.</p>
+          </div>
+
+          <div class="api-panel">
+            <h3>3. Update an Artwork Record (PUT)</h3>
+            <form id="api-update-form" action="#" method="post">
+              <label for="api-update-id">Record ID</label>
+              <input type="number" id="api-update-id" min="1" max="100" placeholder="Enter an ID from 1 to 100" required>
+              <label for="api-update-title">New title</label>
+              <input type="text" id="api-update-title" maxlength="80" placeholder="Enter revised title" required>
+              <button type="submit" id="api-update-button">Send PUT Request</button>
+            </form>
+            <p class="api-status" id="api-update-status" role="status" aria-live="polite">Submit a record ID and revised title to test PUT.</p>
+          </div>
+
+          <div class="api-panel">
+            <h3>4. Delete an Artwork Record (DELETE)</h3>
+            <form id="api-delete-form" action="#" method="post">
+              <label for="api-delete-id">Record ID</label>
+              <input type="number" id="api-delete-id" min="1" max="100" placeholder="Enter an ID from 1 to 100" required>
+              <button type="submit" id="api-delete-button">Send DELETE Request</button>
+            </form>
+            <p class="api-status" id="api-delete-status" role="status" aria-live="polite">Enter a record ID to test a DELETE request.</p>
+          </div>
+
+          <div class="api-panel">
+            <h3>5. Endpoint and Response Details</h3>
+            <p><strong>Service:</strong> JSONPlaceholder</p>
+            <p><strong>Base endpoint:</strong></p>
+            <p class="api-meta">https://jsonplaceholder.typicode.com</p>
+            <p><strong>Methods demonstrated:</strong> GET, POST, PUT, DELETE</p>
+            <p><strong>Data format:</strong> JSON</p>
+            <p class="api-meta">This is a public testing API. POST, PUT and DELETE return demonstration responses and do not permanently modify its dataset.</p>
+            <button type="button" id="api-reset-button">Reset API Demo</button>
+            <p class="api-status" id="api-general-status" role="status" aria-live="polite">No errors reported.</p>
+          </div>
+        </div>
+      </section>
+
+            
+            <section id="task-manager" class="task-manager-panel">
+              <h2>Gallery Operations – Task Manager</h2>
+              <p>Organize gallery work. Add exhibition tasks, edit them, mark them complete, or remove them. Your task list is saved in this browser.</p>
+              <form id="task-form" action="#task-manager" method="post">
+                <div class="task-form-row">
+                  <label for="task-input" class="sr-only">Task description</label>
+                  <input id="task-input" type="text" maxlength="120" placeholder="Enter a race operations task..." required>
+                  <button id="task-submit" type="submit">Add Task</button>
+                </div>
+              </form>
+              <p id="task-message" class="task-message" role="status" aria-live="polite"></p>
+              <div class="task-stats" aria-live="polite">
+                <span class="task-stat">Total: <strong id="task-total">0</strong></span>
+                <span class="task-stat">Pending: <strong id="task-pending">0</strong></span>
+                <span class="task-stat">Completed: <strong id="task-completed">0</strong></span>
+              </div>
+              <div class="task-tools">
+                <label for="task-filter">Display:</label>
+                <select id="task-filter"><option value="all">All Tasks</option><option value="pending">Pending</option><option value="completed">Completed</option></select>
+                <button type="button" id="task-clear-completed">Clear Completed</button>
+              </div>
+              <div id="task-list" aria-live="polite"></div>
+            </section>
+
+
+            <!-- PRACTICUM 14: INTERACTIVE QUIZ -->
+            <section id="interactive-quiz" class="quiz-panel">
+              <h2>ARTORA Art Gallery Challenge – Interactive Quiz</h2>
+              <p>Test your knowledge of art, artists, movements, and creative techniques. Choose an answer and view feedback.</p>
+              <div id="quiz-start-area">
+                <p>Eight questions covering art gallery and motorsport basics.</p>
+                <button type="button" id="quiz-start-button">Start Quiz</button>
+              </div>
+              <div id="quiz-area" hidden>
+                <div class="quiz-status" aria-live="polite">
+                  <strong id="quiz-question-counter">Question 1 of 8</strong>
+                  <span> | Score: <strong id="quiz-score">0</strong></span>
+                </div>
+                <div class="quiz-progress" aria-hidden="true"><div id="quiz-progress-bar" class="quiz-progress-bar"></div></div>
+                <h3 id="quiz-question"></h3>
+                <div id="quiz-options" class="quiz-options"></div>
+                <p id="quiz-feedback" class="quiz-feedback" role="status" aria-live="polite"></p>
+                <div class="quiz-controls"><button type="button" id="quiz-next-button" disabled>Next Question</button></div>
+              </div>
+              <div id="quiz-result" hidden></div>
+            </section>
+
+            <section class="form-section" id="application">
+        <h2>Artist & Exhibition Application</h2>
+
+        <form action="#" method="post">
+          <label for="full-name">Full Name</label>
+          <input id="full-name" name="full-name" type="text" required>
+
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required>
+
+          <label for="role">Role</label>
+          <select id="role" name="role">
+            <option>Race Strategy Analyst</option>
+            <option>Pit Crew Coordinator</option>
+            <option>Track Operations</option>
+          </select>
+
+          <label for="reason">Why do you want to join ARTORA Art Gallery?</label>
+          <textarea id="reason" name="reason" rows="4"></textarea>
+
+          <button id="application-submit" type="submit">Submit</button>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 ARTORA Art Gallery</p>
+  </footer>
+
+  <script>
+    /* EXISTING GALLERY LIGHTBOX */
+    const galleryButtons = document.querySelectorAll(".gallery-open");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCaption = document.getElementById("lightbox-caption");
+    const closeLightbox = document.getElementById("lightbox-close");
+
+    let previousFocus = null;
+
+    function openLightbox(button) {
+      previousFocus = button;
+      lightboxImage.src = button.dataset.full;
+      lightboxImage.alt = button.querySelector("img").alt;
+      lightboxCaption.textContent = button.dataset.caption;
+
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      closeLightbox.focus();
+    }
+
+    function hideLightbox() {
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImage.src = "";
+
+      if (previousFocus) {
+        previousFocus.focus();
+      }
+    }
+
+    galleryButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        openLightbox(button);
+      });
+    });
+
+    closeLightbox.addEventListener("click", hideLightbox);
+
+    lightbox.addEventListener("click", function(event) {
+      if (event.target === lightbox) {
+        hideLightbox();
+      }
+    });
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape" && lightbox.classList.contains("open")) {
+        hideLightbox();
+      }
+    });
+
+    /* PRACTICUM 9: PAUSE, PLAY AND RESTART SLIDING ANIMATION */
+    const slidingText = document.querySelector(".sliding-text");
+    const pauseButton = document.getElementById("pause-animation");
+    const playButton = document.getElementById("play-animation");
+    const restartButton = document.getElementById("restart-animation");
+
+    pauseButton.addEventListener("click", function() {
+      slidingText.style.animationPlayState = "paused";
+    });
+
+    playButton.addEventListener("click", function() {
+      slidingText.style.animationPlayState = "running";
+    });
+
+    restartButton.addEventListener("click", function() {
+      slidingText.style.animation = "none";
+
+      /* Reflow restarts the animation from its first position */
+      void slidingText.offsetWidth;
+
+      slidingText.style.animation = "";
+      slidingText.style.animationPlayState = "running";
+    });
+
+    /* PRACTICUM 10: DOM SELECTION AND MANIPULATION */
+
+    // querySelector() selects the required HTML elements from the DOM.
+    const driverForm = document.querySelector("#driver-form");
+    const driverNameInput = document.querySelector("#driver-name");
+    const driverTeamSelect = document.querySelector("#driver-team");
+    const driverMessage = document.querySelector("#driver-message");
+
+    const raceClock = document.querySelector("#race-clock");
+    const timerMessage = document.querySelector("#timer-message");
+    const noticeMessage = document.querySelector("#notice-message");
+    const trackCondition = document.querySelector("#track-condition");
+    const trackMessage = document.querySelector("#track-message");
+
+    // Variables used by setInterval() and setTimeout().
+    let elapsedSeconds = 0;
+    let raceTimerInterval = null;
+    let raceNoticeTimeout = null;
+
+    // Convert seconds into MM:SS format and update a DOM element.
+    function displayRaceTime() {
+      const minutes = String(Math.floor(elapsedSeconds / 60)).padStart(2, "0");
+      const seconds = String(elapsedSeconds % 60).padStart(2, "0");
+
+      // Manipulating the textContent property of a DOM element.
+      raceClock.textContent = minutes + ":" + seconds;
+    }
+
+    // setInterval() repeatedly updates the race timer every second.
+    function startRaceTimer() {
+      if (raceTimerInterval !== null) {
+        timerMessage.textContent = "The race timer is already running.";
+        return;
+      }
+
+      raceTimerInterval = setInterval(function() {
+        elapsedSeconds++;
+        displayRaceTime();
+      }, 1000);
+
+      timerMessage.textContent = "Race timer started.";
+    }
+
+    // clearInterval() stops the repeated timer updates.
+    function stopRaceTimer() {
+      if (raceTimerInterval !== null) {
+        clearInterval(raceTimerInterval);
+        raceTimerInterval = null;
+        timerMessage.textContent = "Race timer stopped.";
+      } else {
+        timerMessage.textContent = "The race timer is not running.";
+      }
+    }
+
+    function resetRaceTimer() {
+      if (raceTimerInterval !== null) {
+        clearInterval(raceTimerInterval);
+        raceTimerInterval = null;
+      }
+
+      elapsedSeconds = 0;
+      displayRaceTime();
+      timerMessage.textContent = "Race timer reset to 00:00.";
+    }
+
+    // setTimeout() displays a notification once after five seconds.
+    function scheduleRaceNotice() {
+      if (raceNoticeTimeout !== null) {
+        noticeMessage.textContent = "A notification is already scheduled.";
+        return;
+      }
+
+      noticeMessage.textContent =
+        "Exhibition reminder scheduled. It will appear in 5 seconds.";
+
+      raceNoticeTimeout = setTimeout(function() {
+        noticeMessage.textContent =
+          "ARTORA reminder: The exhibition is ready to explore!";
+        raceNoticeTimeout = null;
+      }, 5000);
+    }
+
+    // clearTimeout() cancels a notification that has not appeared yet.
+    function cancelRaceNotice() {
+      if (raceNoticeTimeout !== null) {
+        clearTimeout(raceNoticeTimeout);
+        raceNoticeTimeout = null;
+        noticeMessage.textContent = "Scheduled race notification cancelled.";
+      } else {
+        noticeMessage.textContent =
+          "There is no pending notification to cancel.";
+      }
+    }
+
+    // An interactive select element changes the displayed track status.
+    function updateTrackStatus() {
+      const selectedCondition = trackCondition.value;
+      trackMessage.textContent = "Exhibition status: " + selectedCondition;
+
+      if (selectedCondition === "Opening Soon") {
+        trackMessage.textContent +=
+          " – Opening Soon-weather tyres may be required.";
+      } else if (selectedCondition === "Artist Talk") {
+        trackMessage.textContent +=
+          " – An artist talk is currently taking place.";
+      } else if (selectedCondition === "Temporarily Closed") {
+        trackMessage.textContent +=
+          " – The gallery is temporarily closed.";
+      } else {
+        trackMessage.textContent +=
+          " – Normal art gallery conditions.";
+      }
+    }
+
+    // addEventListener() handles form submission without reloading the page.
+    driverForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const driverName = driverNameInput.value.trim();
+      const driverTeam = driverTeamSelect.value;
+
+      if (driverName === "" || driverTeam === "") {
+        driverMessage.textContent =
+          "Please enter a driver name and select a team.";
+        return;
+      }
+
+      driverMessage.textContent = "Welcome, " + driverName +
+        "! ! Your artist registration for " + driverTeam + " has been received.";
+
+      driverForm.reset();
+    });
+
+    // Also demonstrate DOM selection and event handling for the track selector.
+    trackCondition.addEventListener("change", updateTrackStatus);
+
+    /* PRACTICUM 10: DYNAMIC BILLING USING DOM */
+
+    // querySelector() selects the billing form controls and output elements.
+    const artworkType = document.querySelector("#artwork-type");
+    const artworkQuantity = document.querySelector("#artwork-quantity");
+    const parkingAddon = document.querySelector("#parking-addon");
+    const foodAddon = document.querySelector("#food-addon");
+
+    const artworkAmountOutput = document.querySelector("#artwork-amount");
+    const addonAmountOutput = document.querySelector("#addon-amount");
+    const subtotalOutput = document.querySelector("#bill-subtotal");
+    const serviceChargeOutput = document.querySelector("#service-charge");
+    const gstOutput = document.querySelector("#gst-amount");
+    const grandTotalOutput = document.querySelector("#grand-total");
+    const billMessage = document.querySelector("#bill-message");
+
+    const calculateBillButton = document.querySelector("#calculate-bill");
+    const resetBillButton = document.querySelector("#reset-bill");
+
+    // Format calculated values as Indian Rupees.
+    function formatRupees(amount) {
+      return amount.toLocaleString("en-IN", {
+        style: "currency",
+        currency: "INR",
+        minimumFractionDigits: 2
+      });
+    }
+
+    // Calculate the artwork, add-on, service charge, GST and final bill.
+    function calculateRaceBill() {
+      const pricePerArtwork = Number(artworkType.value);
+      const quantity = Number(artworkQuantity.value);
+
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+        billMessage.textContent =
+          "Please enter a valid artwork quantity between 1 and 10.";
+        artworkQuantity.focus();
+        return;
+      }
+
+      const artworkAmount = pricePerArtwork * quantity;
+      const addonPerArtwork =
+        (parkingAddon.checked ? Number(parkingAddon.value) : 0) +
+        (foodAddon.checked ? Number(foodAddon.value) : 0);
+
+      const addonAmount = addonPerArtwork * quantity;
+      const subtotal = artworkAmount + addonAmount;
+      const serviceCharge = subtotal * 0.05;
+      const gst = (subtotal + serviceCharge) * 0.18;
+      const grandTotal = subtotal + serviceCharge + gst;
+
+      artworkAmountOutput.textContent = formatRupees(artworkAmount);
+      addonAmountOutput.textContent = formatRupees(addonAmount);
+      subtotalOutput.textContent = formatRupees(subtotal);
+      serviceChargeOutput.textContent = formatRupees(serviceCharge);
+      gstOutput.textContent = formatRupees(gst);
+      grandTotalOutput.textContent = formatRupees(grandTotal);
+
+      const selectedArtwork =
+        artworkType.options[artworkType.selectedIndex].text.split(" - ")[0];
+
+      billMessage.textContent =
+        "Bill calculated for " + quantity + " " + selectedArtwork +
+        (quantity === 1 ? " artwork." : " artworks.");
+    }
+
+    // Button click and input/change events update the bill without reloading.
+    calculateBillButton.addEventListener("click", calculateRaceBill);
+    artworkType.addEventListener("change", calculateRaceBill);
+    artworkQuantity.addEventListener("input", calculateRaceBill);
+    parkingAddon.addEventListener("change", calculateRaceBill);
+    foodAddon.addEventListener("change", calculateRaceBill);
+
+    // Reset all billing controls and recalculate the default bill.
+    resetBillButton.addEventListener("click", function() {
+      artworkType.value = "1500";
+      artworkQuantity.value = "1";
+      parkingAddon.checked = false;
+      foodAddon.checked = false;
+      calculateRaceBill();
+      billMessage.textContent = "Billing form has been reset.";
+    });
+
+    // Display the initial bill as soon as the page loads.
+    calculateRaceBill();
+
+
+    /* PRACTICUM 12: REST ENDPOINT DATA MANAGEMENT WITH FETCH API */
+    (function initializeEndpointManager() {
+      "use strict";
+
+      const API_BASE = "https://jsonplaceholder.typicode.com";
+      const POSTS_ENDPOINT = API_BASE + "/posts?_limit=8";
+
+      const fetchButton = document.querySelector("#api-fetch-button");
+      const clearButton = document.querySelector("#api-clear-button");
+      const searchInput = document.querySelector("#api-search");
+      const recordList = document.querySelector("#api-record-list");
+      const statusOutput = document.querySelector("#api-status");
+      const responseMeta = document.querySelector("#api-response-meta");
+      const recordCount = document.querySelector("#api-record-count");
+
+      const createForm = document.querySelector("#api-create-form");
+      const createStatus = document.querySelector("#api-create-status");
+      const updateForm = document.querySelector("#api-update-form");
+      const updateStatus = document.querySelector("#api-update-status");
+      const deleteForm = document.querySelector("#api-delete-form");
+      const deleteStatus = document.querySelector("#api-delete-status");
+      const generalStatus = document.querySelector("#api-general-status");
+      const resetButton = document.querySelector("#api-reset-button");
+
+      let endpointRecords = [];
+      let activeController = null;
+
+      function setStatus(element, message, type) {
+        element.textContent = message;
+        element.classList.remove("success", "error", "loading");
+        if (type) element.classList.add(type);
+      }
+
+      function renderRecords(records) {
+        recordList.replaceChildren();
+        recordCount.textContent = "Records displayed: " + records.length;
+
+        if (records.length === 0) {
+          const emptyMessage = document.createElement("p");
+          emptyMessage.className = "api-empty";
+          emptyMessage.textContent = endpointRecords.length === 0
+            ? "No records are available. Fetch data from the endpoint first."
+            : "No records match your search. Try another keyword.";
+          recordList.appendChild(emptyMessage);
+          return;
+        }
+
+        records.forEach(function(record) {
+          const article = document.createElement("article");
+          article.className = "api-record";
+
+          const heading = document.createElement("h4");
+          heading.textContent = "#" + record.id + " – " + record.title;
+
+          const body = document.createElement("p");
+          body.textContent = record.body;
+
+          const user = document.createElement("small");
+          user.textContent = "User ID: " + record.userId;
+
+          article.append(heading, body, user);
+          recordList.appendChild(article);
+        });
+      }
+
+      function applySearch() {
+        const keyword = searchInput.value.trim().toLowerCase();
+        const filtered = endpointRecords.filter(function(record) {
+          return String(record.title).toLowerCase().includes(keyword) ||
+                 String(record.body).toLowerCase().includes(keyword);
+        });
+        renderRecords(filtered);
+      }
+
+      async function fetchRaceUpdates() {
+        if (activeController) activeController.abort();
+        activeController = new AbortController();
+        const controllerForRequest = activeController;
+
+        fetchButton.disabled = true;
+        setStatus(statusOutput, "Loading race updates from the endpoint...", "loading");
+        responseMeta.textContent = "Waiting for server response...";
+
+        try {
+          const response = await fetch(POSTS_ENDPOINT, {
+            method: "GET",
+            headers: { "Accept": "application/json" },
+            signal: controllerForRequest.signal
+          });
+
+          if (!response.ok) {
+            throw new Error("HTTP " + response.status + " – " + response.statusText);
+          }
+
+          const data = await response.json();
+          if (!Array.isArray(data)) {
+            throw new Error("Unexpected response format. Expected a JSON array.");
+          }
+
+          endpointRecords = data.filter(function(item) {
+            return item && typeof item.id === "number" &&
+              typeof item.title === "string" && typeof item.body === "string";
+          });
+
+          if (endpointRecords.length === 0) {
+            setStatus(statusOutput, "Request succeeded, but the endpoint returned no usable records.", "success");
+          } else {
+            setStatus(statusOutput, "Success! Retrieved " + endpointRecords.length + " records from the API.", "success");
+          }
+
+          responseMeta.textContent = "HTTP " + response.status + " " + response.statusText +
+            " | Method: GET | Content-Type: " + (response.headers.get("content-type") || "not supplied");
+          applySearch();
+        } catch (error) {
+          if (error.name === "AbortError") return;
+          endpointRecords = [];
+          renderRecords([]);
+          setStatus(statusOutput, "Unable to retrieve data: " + error.message, "error");
+          responseMeta.textContent = "Check your internet connection, endpoint URL, and browser console.";
+          setStatus(generalStatus, "GET request failed. " + error.message, "error");
+        } finally {
+          if (activeController === controllerForRequest) {
+            activeController = null;
+            fetchButton.disabled = false;
+          }
+        }
+      }
+
+      async function sendJsonRequest(url, method, payload) {
+        const options = {
+          method: method,
+          headers: { "Content-Type": "application/json; charset=UTF-8", "Accept": "application/json" }
+        };
+        if (payload !== undefined) options.body = JSON.stringify(payload);
+
+        const response = await fetch(url, options);
+        let responseData = null;
+        const responseText = await response.text();
+
+        if (responseText) {
+          try {
+            responseData = JSON.parse(responseText);
+          } catch (parseError) {
+            throw new Error("The server returned invalid JSON.");
+          }
+        }
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status + " – " + response.statusText);
+        }
+
+        return { response: response, data: responseData };
+      }
+
+      createForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const title = document.querySelector("#api-new-title").value.trim();
+        const body = document.querySelector("#api-new-body").value.trim();
+
+        if (!title || !body) {
+          setStatus(createStatus, "Please provide both a title and update details.", "error");
+          return;
+        }
+
+        const submitButton = document.querySelector("#api-create-button");
+        submitButton.disabled = true;
+        setStatus(createStatus, "Sending POST request...", "loading");
+        try {
+          const result = await sendJsonRequest(API_BASE + "/posts", "POST", {
+            title: title, body: body, userId: 1
+          });
+          setStatus(createStatus, "POST successful. Server returned record ID " +
+            result.data.id + ". This is a simulated response and is not permanently stored.", "success");
+          createForm.reset();
+        } catch (error) {
+          setStatus(createStatus, "POST request failed: " + error.message, "error");
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      updateForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const id = Number(document.querySelector("#api-update-id").value);
+        const title = document.querySelector("#api-update-title").value.trim();
+        if (!Number.isInteger(id) || id < 1 || id > 100 || !title) {
+          setStatus(updateStatus, "Enter a record ID from 1 to 100 and a valid title.", "error");
+          return;
+        }
+
+        const submitButton = document.querySelector("#api-update-button");
+        submitButton.disabled = true;
+        setStatus(updateStatus, "Sending PUT request...", "loading");
+        try {
+          const result = await sendJsonRequest(API_BASE + "/posts/" + id, "PUT", {
+            id: id, title: title, body: "Updated from the ARTORA Art Gallery dashboard.", userId: 1
+          });
+          setStatus(updateStatus, "PUT successful. Updated record " + result.data.id +
+            " was returned by the server. The public demo does not save this change permanently.", "success");
+        } catch (error) {
+          setStatus(updateStatus, "PUT request failed: " + error.message, "error");
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      deleteForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const id = Number(document.querySelector("#api-delete-id").value);
+        if (!Number.isInteger(id) || id < 1 || id > 100) {
+          setStatus(deleteStatus, "Enter a valid record ID from 1 to 100.", "error");
+          return;
+        }
+
+        const submitButton = document.querySelector("#api-delete-button");
+        submitButton.disabled = true;
+        setStatus(deleteStatus, "Sending DELETE request...", "loading");
+        try {
+          const result = await sendJsonRequest(API_BASE + "/posts/" + id, "DELETE");
+          setStatus(deleteStatus, "DELETE request completed successfully (HTTP " +
+            result.response.status + "). The public demo simulates deletion; the original data remains unchanged.", "success");
+        } catch (error) {
+          setStatus(deleteStatus, "DELETE request failed: " + error.message, "error");
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      fetchButton.addEventListener("click", fetchRaceUpdates);
+      searchInput.addEventListener("input", applySearch);
+
+      clearButton.addEventListener("click", function() {
+        endpointRecords = [];
+        searchInput.value = "";
+        renderRecords([]);
+        responseMeta.textContent = "Displayed records cleared. No server-side data was changed.";
+        setStatus(statusOutput, "The displayed results have been cleared.", "success");
+      });
+
+      resetButton.addEventListener("click", function() {
+        if (activeController) activeController.abort();
+        endpointRecords = [];
+        searchInput.value = "";
+        createForm.reset();
+        updateForm.reset();
+        deleteForm.reset();
+        renderRecords([]);
+        responseMeta.textContent = "No API response received yet.";
+        setStatus(statusOutput, "Ready. Select Fetch Exhibition Updates to contact the endpoint.", "");
+        setStatus(createStatus, "Enter details and submit to send a sample POST request.", "");
+        setStatus(updateStatus, "Submit a record ID and revised title to test PUT.", "");
+        setStatus(deleteStatus, "Enter a record ID to test a DELETE request.", "");
+        setStatus(generalStatus, "API demonstration has been reset.", "success");
+      });
+    })();
+
+  
+    /* PRACTICUM 13: TASK MANAGER WITH DOM AND LOCALSTORAGE */
+    (function initializeTaskManager() {
+      "use strict";
+      const STORAGE_KEY = "art galleryLeagueTasksPracticum13";
+      const form = document.getElementById("task-form");
+      const input = document.getElementById("task-input");
+      const submitButton = document.getElementById("task-submit");
+      const list = document.getElementById("task-list");
+      const filter = document.getElementById("task-filter");
+      const message = document.getElementById("task-message");
+      const totalOutput = document.getElementById("task-total");
+      const pendingOutput = document.getElementById("task-pending");
+      const completedOutput = document.getElementById("task-completed");
+      const clearCompletedButton = document.getElementById("task-clear-completed");
+      let tasks = [];
+      let editingId = null;
+
+      function loadTasks() {
+        try {
+          const stored = localStorage.getItem(STORAGE_KEY);
+          const parsed = stored ? JSON.parse(stored) : [];
+          tasks = Array.isArray(parsed) ? parsed.filter(t => t && typeof t.id === "string" && typeof t.title === "string" && typeof t.completed === "boolean") : [];
+        } catch (error) {
+          tasks = [];
+          message.textContent = "Saved task data could not be read; starting with an empty list.";
+        }
+      }
+      function saveTasks() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); return true; }
+        catch (error) { message.textContent = "Could not save tasks in browser storage."; return false; }
+      }
+      function updateStats() {
+        totalOutput.textContent = tasks.length;
+        pendingOutput.textContent = tasks.filter(t => !t.completed).length;
+        completedOutput.textContent = tasks.filter(t => t.completed).length;
+      }
+      function renderTasks() {
+        list.replaceChildren();
+        const visible = tasks.filter(t => filter.value === "all" || (filter.value === "pending" && !t.completed) || (filter.value === "completed" && t.completed));
+        if (!visible.length) {
+          const empty = document.createElement("p"); empty.className = "task-empty";
+          empty.textContent = tasks.length ? "No tasks match this filter." : "No tasks yet. Add your first race operations task above.";
+          list.appendChild(empty);
+        }
+        visible.forEach(task => {
+          const card = document.createElement("article"); card.className = "task-item" + (task.completed ? " completed" : "");
+          const main = document.createElement("div"); main.className = "task-item-main";
+          const title = document.createElement("strong"); title.className = "task-title"; title.textContent = task.title;
+          const details = document.createElement("small"); details.textContent = task.completed ? "Status: Completed" : "Status: Pending";
+          main.append(title, details);
+          const actions = document.createElement("div"); actions.className = "task-actions";
+          const toggle = document.createElement("button"); toggle.type = "button"; toggle.textContent = task.completed ? "Mark Pending" : "Complete"; toggle.setAttribute("aria-label",(task.completed ? "Mark pending: " : "Complete: ")+task.title);
+          toggle.addEventListener("click", () => { task.completed = !task.completed; saveTasks(); renderTasks(); message.textContent = task.completed ? "Task marked completed." : "Task marked pending."; });
+          const edit = document.createElement("button"); edit.type = "button"; edit.textContent = "Edit"; edit.setAttribute("aria-label","Edit task: "+task.title);
+          edit.addEventListener("click", () => { input.value = task.title; editingId = task.id; submitButton.textContent = "Save Task"; input.focus(); message.textContent = "Edit the task text and press Save Task."; });
+          const remove = document.createElement("button"); remove.type = "button"; remove.textContent = "Delete"; remove.setAttribute("aria-label","Delete task: "+task.title);
+          remove.addEventListener("click", () => { if (!confirm("Delete this task?")) return; tasks = tasks.filter(t => t.id !== task.id); if(editingId===task.id) resetEditor(); saveTasks(); renderTasks(); message.textContent = "Task deleted."; });
+          actions.append(toggle,edit,remove); card.append(main,actions); list.appendChild(card);
+        });
+        updateStats();
+      }
+      function resetEditor(){ editingId=null; input.value=""; submitButton.textContent="Add Task"; }
+      form.addEventListener("submit", event => {
+        event.preventDefault(); const title=input.value.trim();
+        if(!title){message.textContent="Please enter a task title.";input.focus();return;}
+        if(editingId){ const task=tasks.find(t=>t.id===editingId); if(task) task.title=title; message.textContent="Task updated."; }
+        else {tasks.unshift({id: (Date.now().toString()+Math.random().toString(16).slice(2)),title:title,completed:false,createdAt:new Date().toISOString()}); message.textContent="Task added.";}
+        resetEditor(); saveTasks(); renderTasks();
+      });
+      filter.addEventListener("change",renderTasks);
+      clearCompletedButton.addEventListener("click",()=>{ const completedCount=tasks.filter(t=>t.completed).length; if(!completedCount){message.textContent="There are no completed tasks to clear.";return;} if(!confirm("Remove all completed tasks?"))return; tasks=tasks.filter(t=>!t.completed); saveTasks(); renderTasks(); message.textContent="Completed tasks cleared."; });
+      loadTasks(); renderTasks();
+    })();
+
+
+    /* PRACTICUM 14: QUIZ COMPONENT */
+    (function initializeArtGalleryQuiz() {
+      "use strict";
+      const quizData = [
+        {q:"What flag signals the end of a motor race?",options:["Yellow flag","Chequered flag","Blue flag","Red flag"],answer:1,explanation:"The chequered flag signals the finish."},
+        {q:"What does a pit stop commonly allow a art gallery team to do?",options:["Change tyres and service the car","Change the race track","Restart the event","Increase the lap count"],answer:0,explanation:"Teams can change tyres, repair or adjust the car, and perform other services."},
+        {q:"What is a art gallery circuit?",options:["A car showroom","A closed or defined course used for art gallery","A driver's licence","A type of tyre"],answer:1,explanation:"A circuit is a defined art gallery course."},
+        {q:"What does pole position generally mean?",options:["Last on the grid","Starting from the front position","A pit-lane penalty","The slowest lap"],answer:1,explanation:"Pole position is the leading grid position, usually earned through qualifying."},
+        {q:"What is the main purpose of a art gallery helmet?",options:["Improve engine power","Protect the driver's head","Reduce tyre wear","Measure lap time"],answer:1,explanation:"A helmet is a key piece of driver protective equipment."},
+        {q:"What does a yellow flag usually warn drivers about?",options:["Track hazard or caution","Race finished","Pit lane closed permanently","Fastest lap awarded"],answer:0,explanation:"Yellow flags warn drivers of danger and require caution."},
+        {q:"What is a lap?",options:["A tyre brand","One complete circuit of the course","A pit crew member","A starting signal"],answer:1,explanation:"A lap is one complete trip around the circuit."},
+        {q:"Which component provides grip between a art gallery car and the road?",options:["Spoiler only","Tyres","Radio","Steering wheel cover"],answer:1,explanation:"Tyres are the primary contact and grip interface with the track."}
+      ];
+      const startArea=document.getElementById("quiz-start-area"), startBtn=document.getElementById("quiz-start-button");
+      const quizArea=document.getElementById("quiz-area"), result=document.getElementById("quiz-result");
+      const questionEl=document.getElementById("quiz-question"), optionsEl=document.getElementById("quiz-options");
+      const feedback=document.getElementById("quiz-feedback"), nextBtn=document.getElementById("quiz-next-button");
+      const counter=document.getElementById("quiz-question-counter"), scoreEl=document.getElementById("quiz-score");
+      const progress=document.getElementById("quiz-progress-bar");
+      let current=0,score=0,answered=false;
+      function begin(){current=0;score=0;answered=false;result.hidden=true;startArea.hidden=true;quizArea.hidden=false;renderQuestion();}
+      function renderQuestion(){
+        const item=quizData[current];answered=false;
+        counter.textContent="Question "+(current+1)+" of "+quizData.length;
+        scoreEl.textContent=score;questionEl.textContent=item.q;feedback.textContent="";
+        nextBtn.disabled=true;nextBtn.textContent=current===quizData.length-1?"View Results":"Next Question";
+        progress.style.width=((current+1)/quizData.length*100)+"%";
+        optionsEl.replaceChildren();
+        item.options.forEach((option,i)=>{
+          const btn=document.createElement("button");btn.type="button";btn.className="quiz-option";btn.dataset.option=String(i);btn.textContent=(String.fromCharCode(65+i)+". "+option);
+          optionsEl.appendChild(btn);
+        });
+      }
+      function finish(){
+        quizArea.hidden=true;result.hidden=false;result.className="quiz-final";
+        const heading=document.createElement("h2");heading.textContent="Quiz Completed!";
+        const summary=document.createElement("p");summary.textContent="Your final score: "+score+" out of "+quizData.length+" ("+Math.round(score/quizData.length*100)+"%).";
+        const message=document.createElement("p");message.textContent=score===quizData.length?"Perfect score! Outstanding art gallery knowledge!":score>=5?"Great effort! You know your art gallery basics.":"Keep practicing and try again!";
+        const replay=document.createElement("button");replay.type="button";replay.id="quiz-replay-button";replay.textContent="Replay Quiz";
+        result.replaceChildren(heading,summary,message,replay);
+      }
+      startBtn.addEventListener("click",begin);
+      optionsEl.addEventListener("click",event=>{
+        const button=event.target.closest("button[data-option]");
+        if(!button||answered)return;
+        answered=true;const selected=Number(button.dataset.option),correct=quizData[current].answer;
+        Array.from(optionsEl.children).forEach((b,i)=>{b.disabled=true;if(i===correct)b.classList.add("correct");if(i===selected&&selected!==correct)b.classList.add("incorrect");});
+        if(selected===correct){score++;feedback.textContent="Correct! "+quizData[current].explanation;}
+        else feedback.textContent="Incorrect. "+quizData[current].explanation;
+        scoreEl.textContent=score;nextBtn.disabled=false;
+      });
+      nextBtn.addEventListener("click",()=>{if(!answered)return;if(current!==quizData.length-1){current++;renderQuestion();}else finish();});
+      result.addEventListener("click",event=>{if(event.target.id==="quiz-replay-button")begin();});
+    })();
+
+    /* ARTORA: persistent, click-safe dark mode */
+    (function () {
+      "use strict";
+      function initializeThemeToggle() {
+        const button = document.getElementById("theme-toggle");
+        if (!button) return;
+        const key = "artora-theme";
+        let saved = null;
+        try { saved = window.localStorage.getItem(key); } catch (e) { /* storage may be blocked */ }
+        function setTheme(dark, persist) {
+          document.body.classList.toggle("dark-mode", dark);
+          button.textContent = dark ? "☀️ Light Mode" : "🌙 Dark Mode";
+          button.setAttribute("aria-pressed", dark ? "true" : "false");
+          if (persist) {
+            try { window.localStorage.setItem(key, dark ? "dark" : "light"); } catch (e) { /* theme still works */ }
+          }
+        }
+        setTheme(saved ? saved === "dark" : false, false);
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          setTheme(!document.body.classList.contains("dark-mode"), true);
+        });
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initializeThemeToggle, { once: true });
+      } else {
+        initializeThemeToggle();
+      }
+    })();
+
+  </script>
+
+</body>
+</html>
